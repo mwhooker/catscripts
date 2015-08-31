@@ -1,5 +1,5 @@
 function makeResource(res) {
-  console.log("Making " + res);
+  debug("Making " + res);
   var selector = "table.craftTable tr:contains(" + res + ") td a";
   $(selector).last()[0].click();
 }
@@ -20,7 +20,7 @@ function praiseTheSun() {
 }
 
 function enableAll(tab, resource) {
-  console.log("Enabling " + resource);
+  debug("Enabling " + resource);
   openTab(tab);
   var button = $('.btnContent span:contains(' + resource + ')').parent();
   $("a:contains(+all)", button)[0].click();
@@ -28,22 +28,25 @@ function enableAll(tab, resource) {
 
 function tradeResource(race, number) {
   openTab("Trade");
-  console.log("Trading " + number + " times with " + race);
+  debug("Trading " + number + " times with " + race);
   var panel = $(".panelContainer div:contains(" + race + ")").parent();
   $("a:contains(" + number + ")", panel)[0].click();
 }
 
+function debug(msg) {
+  console.log("%c[%s] %c%s", "color:red", Date(), "color:black", msg);
+}
 
-// 10 minutes
+// 5 minutes
 setInterval(function() {
-  makeResource('slab');
-  makeResource('beam');
-  makeResource('scaffold');
-
+  makeResource('parchment');
   makeResource('manuscript');
   makeResource('blueprint');
   makeResource('compendium');
+}, 5 * 60 * 1000);
 
+// 10 minutes
+setInterval(function() {
   makeResource('steel');
   tradeResource("Spiders", "100")
   tradeResource("Spiders", "100")
@@ -65,6 +68,5 @@ setInterval(function() {
 setInterval(function() {
   enableAll("Space", "Outpost");
   enableAll("Bonfire", "Reactor");
-  makeResource('scaffold');
   praiseTheSun();
 }, 60 * 60 * 1000);
