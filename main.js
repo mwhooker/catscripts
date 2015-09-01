@@ -33,6 +33,10 @@ function tradeResource(race, number) {
   $("a:contains(" + number + ")", panel)[0].click();
 }
 
+function sendHunters() {
+  gamePage.village.huntAll();
+}
+
 function debug(msg) {
   console.log("%c[%s] %c%s", "color:red", Date(), "color:black", msg);
 }
@@ -41,32 +45,32 @@ function debug(msg) {
 setInterval(function() {
   makeResource('parchment');
   makeResource('manuscript');
-  makeResource('blueprint');
-  makeResource('compendium');
-}, 5 * 60 * 1000);
+  //makeResource('compendium');
+  makeResource('steel');
+}, 3 * 60 * 1000);
 
 // 10 minutes
 setInterval(function() {
-  makeResource('steel');
-  tradeResource("Spiders", "100")
-  tradeResource("Spiders", "100")
-  makeResource('steel');
 }, 10 * 60 * 1000);
 
 // 30 minutes
 setInterval(function() {
-  if (Math.random() >= .25) {
-    makeResource('alloy');
-    makeResource('concrete');
-  } else {
-    makeResource('concrete');
-    makeResource('alloy');
-  }
+  // make alloy for eludium
+  makeResource('alloy');
+  // make eludium first, so we don't accidentally go over limit
+  makeResource('eludium');
+  // get uranium
+  // tradeResource('Dragons', 'all');
+  
+  // turn on all outposts
+  enableAll("Space", "Outpost");
+  // reactivate reactors if we ran out of uranium
+  enableAll("Bonfire", "Reactor");
+
+  sendHunters();
 }, 30 * 60 * 1000);
 
 // 1 hour
 setInterval(function() {
-  enableAll("Space", "Outpost");
-  enableAll("Bonfire", "Reactor");
   praiseTheSun();
 }, 60 * 60 * 1000);
