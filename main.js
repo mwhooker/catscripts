@@ -33,21 +33,73 @@ function tradeResource(race, number) {
   $("a:contains(" + number + ")", panel)[0].click();
 }
 
+function getMainBuildTab() {
+  return $('.tabsContainer').children().first().text();
+}
+
+function build(tab, building) {
+  debug("Building " + building);
+  openTab(tab);
+  var button = $('.btnContent span:contains(' + building + ')').parent();
+  button.click();
+}
+
+function buildMain(building) {
+  build(getMainBuildTab(), building);
+}
+
 function sendHunters() {
   gamePage.village.huntAll();
+}
+
+function learnAllScience() {
+  debug("Learning");
+  openTab("Science");
+  $(".btnContent:visible").click();
+}
+
+function learnAllTechs() {
+  debug("Teching");
+  openTab("Workshop");
+  $('#gameContainerId > div.tabInner > div:nth-child(3) > div .btnContent:visible').click();
+}
+
+function resourceIncreasing(res) {
+  var x = $("#resContainer > table > tr td:contains(" + res + ")").parent();
+  return $("td:nth-child(4):contains(+)", x).length > 0;
 }
 
 function debug(msg) {
   console.log("%c[%s] %c%s", "color:red", Date(), "color:black", msg);
 }
 
+function eachWrapper(f) { 
+  return function (i, e) {
+    return f(e);
+  }
+}
+
 // 5 minutes
 setInterval(function() {
-  makeResource('parchment');
-  makeResource('manuscript');
-  //makeResource('compendium');
-  makeResource('steel');
-}, 3 * 60 * 1000);
+  $.each(["Hut", "Log House", "Barn", "Warehouse"], eachWrapper(buildMain));
+  $.each(["Lumbermill", "Mine", "Smelter", "Workshop"], eachWrapper(buildMain));
+  $.each(["Library", "Academy"], eachWrapper(buildMain));
+  sendHunters();
+  $.each(["beam", "slab", "plate", "parchment", "manuscript"], eachWrapper(makeResource));
+  if (resourceIncreasing("catnip")) {
+    $.each(["Catnip field", "Pasture", "Aqueduct"], eachWrapper(buildMain));
+  }
+  $.each(["Tradepost", "Ampitheatre", "Unic. Pasture"], eachWrapper(buildMain));
+
+  if (Math.random() > .5) {
+    enableAll("Village", "Woodcutter")
+  } else {
+    enableAll("Village", "Miner")
+  }
+  learnAllScience();
+  learnAllTechs();
+  openTab("Bonfire");
+}, 5 * 60 * 1000);
 
 // 10 minutes
 setInterval(function() {
@@ -55,22 +107,9 @@ setInterval(function() {
 
 // 30 minutes
 setInterval(function() {
-  // make alloy for eludium
-  makeResource('alloy');
-  // make eludium first, so we don't accidentally go over limit
-  makeResource('eludium');
-  // get uranium
-  // tradeResource('Dragons', 'all');
-  
-  // turn on all outposts
-  enableAll("Space", "Outpost");
-  // reactivate reactors if we ran out of uranium
-  enableAll("Bonfire", "Reactor");
-
-  sendHunters();
 }, 30 * 60 * 1000);
 
 // 1 hour
 setInterval(function() {
-  praiseTheSun();
+  //praiseTheSun();
 }, 60 * 60 * 1000);
