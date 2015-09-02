@@ -1,5 +1,3 @@
-//TODO: make in to web server so I can use bookmarklet 
-
 function makeResource(res) {
   var last = $("table.craftTable tr:contains(" + res + ") td a").last();
   if (last.is(":visible")) {
@@ -99,9 +97,12 @@ function observe() {
 
 function emergencyFood() {
   if ($("#advisorsContainer").children().length > 0) {
+    debug("emergencyFood");
     return tradeOnce("Sharks");
   }
 }
+
+debug("initializing");
 
 setInterval(function() {
   observe();
@@ -109,35 +110,30 @@ setInterval(function() {
 }, 1000 * 30);
 
 // 5 minutes
-setInterval(function() {
+s/etInterval(function() {
   learnAllTechs();
   learnAllScience();
   $.each(["Hut", "Log House"], eachWrapper(buildMain));
   $.each(["Workshop", "Smelter"], eachWrapper(buildMain));
-  $.each(["Library", "Academy"], eachWrapper(buildMain));
   $.each(["Lumber Mill", "Mine"], eachWrapper(buildMain));
-  $.each(["Barn", "Warehouse"], eachWrapper(buildMain));
+  $.each(["Barn"], eachWrapper(buildMain));
+  $.each(["Observatory", "Steamworks", "Harbour"], eachWrapper(buildMain));
 
-  //$.each(["Library", "Academy"], eachWrapper(buildMain));
-  sendHunters();
-  $.each(["beam", "slab", "steel", "parchment", "manuscript"], eachWrapper(makeResource));
-  if (resourceIncreasing("catnip")) {
-    $.each(["Catnip field", "Pasture", "Aqueduct"], eachWrapper(buildMain));
-    // replenish catnip
-    tradeOnce("Sharks");
-  }
-  $.each(["Tradepost", "Ampitheatre", "Unic. Pasture"], eachWrapper(buildMain));
+  $.each(["beam", "slab", "steel", "parchment", "manuscript", "compendium"], eachWrapper(makeResource));
 
   if (Math.random() > 0.5) {
     enableAll("Village", "Woodcutter");
+    tradeResource("Lizards", "all");
   } else {
     enableAll("Village", "Miner");
   }
+  sendHunters();
   openTab("Bonfire");
 }, 5 * 60 * 1000);
 
 // 10 minutes
 setInterval(function() {
+  $.each(["scaffold", "gear"], eachWrapper(makeResource));
 }, 10 * 60 * 1000);
 
 // 30 minutes
@@ -146,5 +142,5 @@ setInterval(function() {
 
 // 1 hour
 setInterval(function() {
-  //praiseTheSun();
+  praiseTheSun();
 }, 60 * 60 * 1000);
