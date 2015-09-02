@@ -3,36 +3,43 @@
 function makeResource(res) {
   debug("Making " + res);
   var selector = "table.craftTable tr:contains(" + res + ") td a";
-  $(selector).last()[0].click();
+  return $(selector).last()[0].click();
 }
 
 function openTab(tab) {
   var selector = ".tabsContainer a:contains(" + tab + ")";
-  $(selector)[0].click();
+  return $(selector)[0].click();
 }
 
 function enableOutpost() {
   openTab("Space");
-  $("#gameContainerId > div.tabInner > div:nth-child(1) > div.container > div:nth-child(6) > div > div:nth-child(3) > a")[0].click();
+  return $("#gameContainerId > div.tabInner > div:nth-child(1) > div.container > div:nth-child(6) > div > div:nth-child(3) > a")[0].click();
 }
 
 function praiseTheSun() {
   openTab("Religion");
-  $("#gameContainerId > div.tabInner > div:nth-child(2) > div.container > div:nth-child(3) > div > span")[0].click();
+  return $("#gameContainerId > div.tabInner > div:nth-child(2) > div.container > div:nth-child(3) > div > span")[0].click();
 }
 
 function enableAll(tab, resource) {
   debug("Enabling " + resource);
   openTab(tab);
   var button = $('.btnContent span:contains(' + resource + ')').parent();
-  $("a:contains(+all)", button)[0].click();
+  return $("a:contains(+all)", button)[0].click();
+}
+
+function tradeOnce(race) {
+  openTab("Trade");
+  debug("Trading once with " + race);
+  var panel = $(".panelContainer div:contains(" + race + ")").parent();
+  return $(".btn", panel).click();
 }
 
 function tradeResource(race, number) {
   openTab("Trade");
   debug("Trading " + number + " times with " + race);
   var panel = $(".panelContainer div:contains(" + race + ")").parent();
-  $("a:contains(" + number + ")", panel)[0].click();
+  return $("a:contains(" + number + ")", panel)[0].click();
 }
 
 function getMainBuildTab() {
@@ -43,27 +50,27 @@ function build(tab, building) {
   debug("Building " + building);
   openTab(tab);
   var button = $('.btnContent span:contains(' + building + ')').parent();
-  button.click();
+  return button.click();
 }
 
 function buildMain(building) {
-  build(getMainBuildTab(), building);
+  return build(getMainBuildTab(), building);
 }
 
 function sendHunters() {
-  gamePage.village.huntAll();
+  return gamePage.village.huntAll();
 }
 
 function learnAllScience() {
   debug("Learning");
   openTab("Science");
-  $(".btnContent:visible").click();
+  return $(".btnContent:visible").click();
 }
 
 function learnAllTechs() {
   debug("Teching");
   openTab("Workshop");
-  $('#gameContainerId > div.tabInner > div:nth-child(3) > div .btnContent:visible').click();
+  return $('#gameContainerId > div.tabInner > div:nth-child(3) > div .btnContent:visible').click();
 }
 
 function resourceIncreasing(res) {
@@ -82,7 +89,7 @@ function eachWrapper(f) {
 }
 
 function observe() {
-  $('#observeBtn').click();
+  return $('#observeBtn').click();
 }
 
 setInterval(function() {
@@ -104,6 +111,8 @@ setInterval(function() {
   $.each(["beam", "slab", "steel", "parchment", "manuscript"], eachWrapper(makeResource));
   if (resourceIncreasing("catnip")) {
     $.each(["Catnip field", "Pasture", "Aqueduct"], eachWrapper(buildMain));
+    // replenish catnip
+    tradeOnce("Sharks");
   }
   $.each(["Tradepost", "Ampitheatre", "Unic. Pasture"], eachWrapper(buildMain));
 
@@ -125,5 +134,5 @@ setInterval(function() {
 
 // 1 hour
 setInterval(function() {
-  praiseTheSun();
+  //praiseTheSun();
 }, 60 * 60 * 1000);
