@@ -92,8 +92,15 @@ function observe() {
   return $('#observeBtn').click();
 }
 
+function emergencyFood() {
+  if ($("#advisorsContainer").children().length > 0) {
+    return tradeOnce("Sharks");
+  }
+}
+
 setInterval(function() {
   observe();
+  emergencyFood();
 }, 1000 * 30);
 
 // 5 minutes
