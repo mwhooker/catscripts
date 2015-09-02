@@ -1,9 +1,11 @@
 //TODO: make in to web server so I can use bookmarklet 
 
 function makeResource(res) {
-  debug("Making " + res);
-  var selector = "table.craftTable tr:contains(" + res + ") td a";
-  return $(selector).last()[0].click();
+  var last = $("table.craftTable tr:contains(" + res + ") td a").last();
+  if (last.is(":visible")) {
+    debug("Making " + res);
+    return last.click();
+  }
 }
 
 function openTab(tab) {
@@ -47,9 +49,12 @@ function getMainBuildTab() {
 }
 
 function build(tab, building) {
-  debug("Building " + building);
   openTab(tab);
   var button = $('.btnContent span:contains(' + building + ')').parent();
+  if (button.parent().hasClass("disabled")) {
+    return;
+  }
+  debug("Building " + building);
   return button.click();
 }
 
