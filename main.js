@@ -1,3 +1,5 @@
+//TODO: make in to web server so I can use bookmarklet 
+
 function makeResource(res) {
   debug("Making " + res);
   var selector = "table.craftTable tr:contains(" + res + ") td a";
@@ -76,28 +78,40 @@ function debug(msg) {
 function eachWrapper(f) { 
   return function (i, e) {
     return f(e);
-  }
+  };
 }
+
+function observe() {
+  $('#observeBtn').click();
+}
+
+setInterval(function() {
+  observe();
+}, 1000 * 30);
 
 // 5 minutes
 setInterval(function() {
-  $.each(["Hut", "Log House", "Barn", "Warehouse"], eachWrapper(buildMain));
-  $.each(["Lumbermill", "Mine", "Smelter", "Workshop"], eachWrapper(buildMain));
+  learnAllTechs();
+  learnAllScience();
+  $.each(["Hut", "Log House"], eachWrapper(buildMain));
+  $.each(["Workshop", "Smelter"], eachWrapper(buildMain));
   $.each(["Library", "Academy"], eachWrapper(buildMain));
+  $.each(["Lumber Mill", "Mine"], eachWrapper(buildMain));
+  $.each(["Barn", "Warehouse"], eachWrapper(buildMain));
+
+  //$.each(["Library", "Academy"], eachWrapper(buildMain));
   sendHunters();
-  $.each(["beam", "slab", "plate", "parchment", "manuscript"], eachWrapper(makeResource));
+  $.each(["beam", "slab", "steel", "parchment", "manuscript"], eachWrapper(makeResource));
   if (resourceIncreasing("catnip")) {
     $.each(["Catnip field", "Pasture", "Aqueduct"], eachWrapper(buildMain));
   }
   $.each(["Tradepost", "Ampitheatre", "Unic. Pasture"], eachWrapper(buildMain));
 
-  if (Math.random() > .5) {
-    enableAll("Village", "Woodcutter")
+  if (Math.random() > 0.5) {
+    enableAll("Village", "Woodcutter");
   } else {
-    enableAll("Village", "Miner")
+    enableAll("Village", "Miner");
   }
-  learnAllScience();
-  learnAllTechs();
   openTab("Bonfire");
 }, 5 * 60 * 1000);
 
@@ -111,5 +125,5 @@ setInterval(function() {
 
 // 1 hour
 setInterval(function() {
-  //praiseTheSun();
+  praiseTheSun();
 }, 60 * 60 * 1000);
