@@ -19,6 +19,7 @@
 
   function praiseTheSun() {
     openTab("Religion");
+    debug("praising the sun");
     return $("#gameContainerId > div.tabInner > div:nth-child(2) > div.container > div:nth-child(3) > div > span")[0].click();
   }
 
@@ -68,7 +69,12 @@
   function learnAllScience() {
     debug("Learning");
     openTab("Science");
-    return $(".btnContent:visible").click();
+    var sci = $(".btn:visible").not(".disabled");
+    if (sci.length > 0) {
+      var toLearn = sci.first();
+      debug("trying to learn " + toLearn.text());
+      toLearn.click();
+    }
   }
 
   function learnAllTechs() {
@@ -86,9 +92,14 @@
     console.log("%c[%s] %c%s", "color:red", Date(), "color:black", msg);
   }
 
-  function eachWrapper(f) {
+  function eachWrapper(f, timeout) {
     return function (i, e) {
-      return f(e);
+      if (typeof timeout === 'undefined' || timeout === 0) {
+        f(e);
+      } else {
+        // need to wait a bit in an each so the page has time to update
+        setTimeout(function(){ f(e); }, timeout);
+      }
     };
   }
 
@@ -103,48 +114,56 @@
     }
   }
 
-  function everyThirtySec() {
+  function everyTenSec() {
     observe();
     emergencyFood();
   }
 
-  function everyTwoMin() {
-    if (Math.random() >= 0.9) {
-      tradeResource("Lizards", "all");
-    } else {
-      sendHunters();
+  function everyMin() {
+    /*
+    if (Math.random() >= 0.5) {
     }
-    $.each(["parchment", "manuscript", "compendium"], eachWrapper(makeResource));
+    */
+    makeResource("slab")
+    tradeResource("Dragons", "all");
+    tradeResource("Zebras", "all");
+    sendHunters();
+    $.each(["parchment", "manuscript", "compendium", "blueprint"], eachWrapper(makeResource, 500));
+    openTab("Bonfire");
   }
   // 5 minutes
   function everyFiveMin() {
     learnAllTechs();
     learnAllScience();
     $.each(["Hut", "Log House"], eachWrapper(buildMain));
-    $.each(["Workshop", "Smelter"], eachWrapper(buildMain));
-    $.each(["Lumber Mill", "Mine"], eachWrapper(buildMain));
-    $.each(["Barn"], eachWrapper(buildMain));
-    $.each(["Observatory", "Steamworks", "Harbour"], eachWrapper(buildMain));
+    $.each(["Workshop", "Smelter", "Calciner"], eachWrapper(buildMain));
+    $.each(["Barn", "Warehouse"/*, "Harbour"*/], eachWrapper(buildMain));
+    $.each(["Magneto", "Steamworks", "Factory", "Reactor"], eachWrapper(buildMain));
+    $.each(["Observatory", "Library", "Academy"], eachWrapper(buildMain));
+    // $.each(["Chapel", "Temple"], eachWrapper(buildMain));
+    $.each(["Lumber Mill", "Mine", "Quarry", "Tradepost"], eachWrapper(buildMain));
 
-    $.each(["beam", "slab", "steel"], eachWrapper(makeResource));
-
+    /*
     if (Math.random() > 0.5) {
       enableAll("Small town", "Woodcutter");
     } else {
       enableAll("Small town", "Miner");
     }
+    */
     $.each(["Catnip field", "Pasture", "Aqueduct"], eachWrapper(buildMain));
+    $.each(["steel", "plate", "scaffold"], eachWrapper(makeResource));
     openTab("Bonfire");
   }
+  
 
   // 10 minutes
   function everyTenMin() {
-    $.each(["scaffold", "gear"], eachWrapper(makeResource));
+    // openTab("Bonfire");
+    praiseTheSun();
   }
 
   // 1 hour
   function everyHour() {
-    praiseTheSun();
   }
 
   debug("initializing");
@@ -155,8 +174,8 @@
   }
   window.mattIntervals = [];
 
-  window.mattIntervals.push(setInterval(everyThirtySec, 1000 * 30));
-  window.mattIntervals.push(setInterval(everyTwoMin, 2 * 60 * 1000));
+  window.mattIntervals.push(setInterval(everyTenSec, 1000 * 10));
+  window.mattIntervals.push(setInterval(everyMin, 60 * 1000));
   window.mattIntervals.push(setInterval(everyFiveMin, 5 * 60 * 1000));
   window.mattIntervals.push(setInterval(everyTenMin, 10 * 60 * 1000));
   window.mattIntervals.push(setInterval(everyHour, 60 * 60 * 1000));
