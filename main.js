@@ -133,15 +133,14 @@
     learnAllTechs();
     learnAllScience();
     sendHunters();
-    $.each(["parchment", "manuscript", "compendium"/*, "blueprint"*/], eachWrapper(makeResource, 500));
+    $.each(["blueprint", "compendium", "manuscript", "parchment"], eachWrapper(makeResource, 500));
     $.each(["Hut", "Log House"], eachWrapper(buildMain));
     $.each(["Workshop", "Smelter", "Calciner", "Oil Well"], eachWrapper(buildMain));
-    $.each(["Barn", "Warehouse"/*, "Harbour"*/], eachWrapper(buildMain));
-    $.each(["Magneto", "Steamworks", "Factory", "Reactor"], eachWrapper(buildMain));
-    $.each(["Observatory", "Library", "Academy"], eachWrapper(buildMain));
+    // $.each(["Barn", "Warehouse"/*, "Harbour"*/], eachWrapper(buildMain));
+    $.each(["Magneto", "Steamworks", "Factory", "Reactor", "Accelerator"], eachWrapper(buildMain));
+    // $.each(["Observatory", "Library", "Academy"], eachWrapper(buildMain));
     // $.each(["Chapel", "Temple"], eachWrapper(buildMain));
     $.each(["Lumber Mill", "Mine", "Quarry", "Tradepost"], eachWrapper(buildMain));
-    $.each(["Factory", "Reactor", "Accelerator"], eachWrapper(buildMain));
 
     /*
     if (Math.random() > 0.5) {
@@ -150,8 +149,14 @@
       enableAll("Small town", "Miner");
     }
     */
-    $.each(["Catnip field", "Pasture", "Aqueduct"], eachWrapper(buildMain));
-    $.each(["steel", "plate", "slab", "beam", "concrete", "alloy"], eachWrapper(makeResource));
+    // $.each(["Catnip field", "Pasture", "Aqueduct"], eachWrapper(buildMain));
+    $.each(["steel", "slab", "beam", "concrete", /*"alloy"*/], eachWrapper(makeResource));
+
+    enableAll("Space", "Outpost");
+    tradeResource("Zebras", "all");
+    tradeResource("Dragons", "all");
+    // reactivate reactors if we ran out of uranium
+    enableAll("Bonfire", "Reactor");
     openTab("Bonfire");
   }
   
@@ -159,7 +164,7 @@
   // 10 minutes
   function everyTenMin() {
     // openTab("Bonfire");
-    praiseTheSun();
+    // praiseTheSun();
   }
 
   // 1 hour
@@ -167,11 +172,16 @@
   }
 
   debug("initializing");
-  if (typeof window.mattIntervals !== 'undefined') {
-    $.each(window.mattIntervals, function(i, e) {
-      clearInterval(e);
-    });
-  }
+
+  window.unloadMatt = function() {
+    if (typeof window.mattIntervals !== 'undefined') {
+      debug("unloading");
+      $.each(window.mattIntervals, function(i, e) {
+        clearInterval(e);
+      });
+    }
+  };
+  window.unloadMatt();
   window.mattIntervals = [];
 
   //window.mattIntervals.push(setInterval(everyTenSec, 1000 * 10));
