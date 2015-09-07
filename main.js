@@ -69,7 +69,7 @@
   function learnAllScience() {
     debug("Learning");
     openTab("Science");
-    var sci = $(".btn:visible").not(".disabled");
+    var sci = $("table .btn:visible").not(".disabled");
     if (sci.length > 0) {
       var toLearn = sci.first();
       debug("trying to learn " + toLearn.text());
@@ -124,24 +124,24 @@
     if (Math.random() >= 0.5) {
     }
     */
-    makeResource("slab")
-    tradeResource("Dragons", "all");
-    tradeResource("Zebras", "all");
-    sendHunters();
-    $.each(["parchment", "manuscript", "compendium", "blueprint"], eachWrapper(makeResource, 500));
-    openTab("Bonfire");
+    // makeResource("slab")
+    // tradeResource("Dragons", "all");
+    // tradeResource("Zebras", "all");
   }
   // 5 minutes
   function everyFiveMin() {
     learnAllTechs();
     learnAllScience();
+    sendHunters();
+    $.each(["parchment", "manuscript", "compendium"/*, "blueprint"*/], eachWrapper(makeResource, 500));
     $.each(["Hut", "Log House"], eachWrapper(buildMain));
-    $.each(["Workshop", "Smelter", "Calciner"], eachWrapper(buildMain));
+    $.each(["Workshop", "Smelter", "Calciner", "Oil Well"], eachWrapper(buildMain));
     $.each(["Barn", "Warehouse"/*, "Harbour"*/], eachWrapper(buildMain));
     $.each(["Magneto", "Steamworks", "Factory", "Reactor"], eachWrapper(buildMain));
     $.each(["Observatory", "Library", "Academy"], eachWrapper(buildMain));
     // $.each(["Chapel", "Temple"], eachWrapper(buildMain));
     $.each(["Lumber Mill", "Mine", "Quarry", "Tradepost"], eachWrapper(buildMain));
+    $.each(["Factory", "Reactor", "Accelerator"], eachWrapper(buildMain));
 
     /*
     if (Math.random() > 0.5) {
@@ -151,7 +151,7 @@
     }
     */
     $.each(["Catnip field", "Pasture", "Aqueduct"], eachWrapper(buildMain));
-    $.each(["steel", "plate", "scaffold"], eachWrapper(makeResource));
+    $.each(["steel", "plate", "slab", "beam", "concrete", "alloy"], eachWrapper(makeResource));
     openTab("Bonfire");
   }
   
@@ -174,9 +174,9 @@
   }
   window.mattIntervals = [];
 
-  window.mattIntervals.push(setInterval(everyTenSec, 1000 * 10));
-  window.mattIntervals.push(setInterval(everyMin, 60 * 1000));
+  //window.mattIntervals.push(setInterval(everyTenSec, 1000 * 10));
+  //window.mattIntervals.push(setInterval(everyMin, 60 * 1000));
   window.mattIntervals.push(setInterval(everyFiveMin, 5 * 60 * 1000));
   window.mattIntervals.push(setInterval(everyTenMin, 10 * 60 * 1000));
-  window.mattIntervals.push(setInterval(everyHour, 60 * 60 * 1000));
+  //window.mattIntervals.push(setInterval(everyHour, 60 * 60 * 1000));
 })();
